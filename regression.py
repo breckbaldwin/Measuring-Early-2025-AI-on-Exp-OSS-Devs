@@ -150,7 +150,7 @@ def main() -> None:
     print(f"Regression calculated speedup of:          {round(estimand, 3)}")
     for name, ci in cis.items():
         print(
-            f"CI calculed with stderr={name}:{' ' * (17 - len(name))} ({round(ci[0], 3)}, {round(ci[1], 3)})",
+            f"CI calculated with stderr={name}:{' ' * (17 - len(name))} ({round(ci[0], 3)}, {round(ci[1], 3)})",
         )
 
 
