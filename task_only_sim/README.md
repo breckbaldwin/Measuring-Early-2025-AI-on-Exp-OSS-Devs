@@ -1,99 +1,125 @@
-# Simple Task Performance Simulation
+# Task-Only AI Treatment Simulation
+
+This folder contains a simplified simulation focusing only on task performance and heteroskedastic variance for `initial_implementation_time` across AI treatment conditions.
 
 ## Overview
 
-This simplified simulation abstracts from everything except **task performance** and focuses on `initial_implementation_time` for the two AI treatment conditions with heteroskedastic variance.
+The simulation abstracts from everything except:
+1. **Initial implementation time** across AI treatment conditions
+2. **Heteroskedastic variance** structure
+3. **Core treatment effects** without complex developer heterogeneity
 
-## Purpose
+## File Structure
 
-The goal is to create a **minimal, focused simulation** that captures the core empirical patterns:
-1. **AI treatment effect**: AI slows down developers by ~28.6 minutes
-2. **Heteroskedastic variance**: AI enabled group has higher variance than AI disabled group
+### **Core Simulation Files**
+- **`simple_task_simulation.py`** - Main simulation script (matplotlib version)
+- **`simple_task_simulation_plotnine.py`** - PlotNine visualization version
+- **`simple_simulation_data.csv`** - Generated simulation data
+- **`simple_simulation_results.png`** - Combined visualization plots
 
-## Core Model
+### **PlotNine Version**
+- **`simple_simulation_data_plotnine.csv`** - PlotNine simulation data
+- **`simple_simulation_results_plotnine_*.png`** - Individual PlotNine plots
+- **`README_PLOTNINE.md`** - Documentation for PlotNine version
 
-The simulation uses a simple linear model:
+### **Stan Model Implementation**
+- **`stan/`** - Directory containing all Stan-related files
+  - Stan model specification and data files
+  - Data generation scripts
+  - Comprehensive documentation
+  - See `stan/README.md` for details
 
+### **Documentation**
+- **`SIMULATION_SUMMARY.md`** - Complete memorialization of simulation creation
+- **`README_PLOTNINE.md`** - PlotNine version documentation
+- **`stan/README.md`** - Stan model documentation
+
+## Quick Start
+
+### **1. Run Basic Simulation**
+```bash
+python3 simple_task_simulation.py
+```
+
+### **2. Run PlotNine Version**
+```bash
+python3 simple_task_simulation_plotnine.py
+```
+
+### **3. Run Stan Model**
+```bash
+cd stan
+python3 generate_stan_data.py
+# Then follow stan/README.md for Stan execution
+```
+
+## Model Structure
+
+### **Core DGP**
 ```
 initial_implementation_time = baseline + treatment_effect + error
 ```
 
 Where:
-- **`baseline`**: 90 minutes (AI disabled condition)
-- **`treatment_effect`**: +28.6 minutes if AI enabled
-- **`error`**: Random noise with different variance by treatment group
+- **baseline**: Base time when AI is disabled (~90 minutes)
+- **treatment_effect**: AI treatment effect (~28.6 minutes, positive = slower)
+- **error**: Random error with heteroskedastic variance
+  - AI disabled: ~60 minutes std
+  - AI enabled: ~78 minutes std (1.3x higher variance)
 
-## Key Features
+### **Parameters**
+- **Sample size**: 246 tasks
+- **Treatment distribution**: 110 AI disabled, 136 AI enabled
+- **Heteroskedastic factor**: 1.3 (AI group gets higher variance)
 
-### 1. **Simplified Structure**
-- No developer heterogeneity
-- No task complexity effects
-- No learning curves or temporal effects
-- Pure focus on treatment effect and variance structure
+## Key Results
 
-### 2. **Heteroskedastic Error**
-- **AI Disabled (0)**: Base error variance
-- **AI Enabled (1)**: Base error variance × 1.3 (heteroskedastic factor)
+### **Treatment Effects**
+- **AI Disabled**: Mean = 90.1, SD = 58.6 minutes
+- **AI Enabled**: Mean = 121.9, SD = 72.4 minutes
+- **Treatment Effect**: 31.8 minutes (AI slows down implementation)
+- **Variance Ratio**: 1.53 (AI group has higher variance)
 
-### 3. **Treatment Assignment**
-- Matches observed data distribution: 110 AI disabled, 136 AI enabled
-- Random assignment within the total sample
+### **Validation**
+- **Parameter Recovery**: Successfully recovers true simulation parameters
+- **Variance Structure**: Captures observed heteroskedastic patterns
+- **Treatment Effects**: Matches empirical observations from real data
 
-## Files
+## Visualization
 
-- **`simple_task_simulation.py`**: Main simulation script
-- **`simple_simulation_data.csv`**: Generated simulation data
-- **`simple_simulation_results.png`**: Visualization plots
-- **`README.md`**: This documentation file
+### **Matplotlib Version**
+- Single combined plot with 4 subplots
+- Treatment comparison, distribution, box plots, variance analysis
 
-## Usage
+### **PlotNine Version**
+- 4 individual high-quality plots
+- Professional appearance with `theme_minimal()`
+- Publication-ready visualizations
 
-```bash
-cd task_only_sim
-python3 simple_task_simulation.py
-```
+### **Stan Analysis**
+- Bayesian parameter estimation
+- Posterior predictive samples
+- Uncertainty quantification
 
-## Expected Output
+## Dependencies
 
-The simulation should reproduce:
-- **Treatment effect**: ~28.6 minutes (AI enabled slower)
-- **Variance ratio**: ~1.75 (AI enabled has higher variance)
-- **Sample sizes**: 110 AI disabled, 136 AI enabled
-
-## Advantages of Simplified Approach
-
-1. **Clear causal structure**: Easy to understand the treatment effect
-2. **Focused analysis**: Isolates the key patterns of interest
-3. **Reproducible results**: Simple model, stable outcomes
-4. **Easy modification**: Can easily adjust parameters
-5. **Fast execution**: No complex calculations or data processing
-
-## Comparison with Full DGP
-
-| Aspect | Full DGP | Simple Simulation |
-|--------|----------|-------------------|
-| **Developer effects** | ✅ Random effects model | ❌ No individual differences |
-| **Task complexity** | ✅ Multi-factor model | ❌ No complexity effects |
-| **Treatment effect** | ✅ Reproduces observed | ✅ Reproduces observed |
-| **Variance structure** | ✅ Heteroskedastic | ✅ Heteroskedastic |
-| **Complexity** | 🔴 High | 🟢 Low |
-| **Interpretability** | 🔴 Complex | 🟢 Simple |
-| **Modification ease** | 🔴 Difficult | 🟢 Easy |
+- **Python 3**: Core simulation and data generation
+- **NumPy**: Numerical operations and random sampling
+- **Pandas**: Data manipulation and CSV output
+- **Matplotlib**: Basic plotting (matplotlib version)
+- **PlotNine**: Advanced plotting (PlotNine version)
+- **CmdStan**: Stan model execution (Stan version)
 
 ## Use Cases
 
-This simplified simulation is ideal for:
-- **Understanding the core treatment effect**
-- **Teaching basic simulation concepts**
-- **Quick parameter sensitivity analysis**
-- **Baseline comparison for more complex models**
-- **Demonstrating heteroskedastic error structures**
+1. **Research**: Validate treatment effect hypotheses
+2. **Teaching**: Demonstrate heteroskedastic variance concepts
+3. **Methodology**: Compare frequentist vs Bayesian approaches
+4. **Extension**: Foundation for more complex models
 
 ## Future Enhancements
 
-While keeping it simple, potential additions could include:
-- **Parameter sensitivity analysis**
-- **Different error distributions**
-- **Alternative treatment effect specifications**
-- **Bootstrap confidence intervals**
-- **Power analysis for different sample sizes**
+- **Hierarchical Structure**: Add developer-level random effects
+- **Covariates**: Include task complexity, developer experience
+- **Temporal Effects**: Model learning curves over time
+- **Multiple Outcomes**: Extend to other performance metrics
